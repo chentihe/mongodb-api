@@ -1,0 +1,36 @@
+server:
+  port: ${PORT:8080}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationSorter: alpha
+    tagsSorter: alpha
+
+jwt:
+  private:
+    key: classpath:app.key
+  public:
+    key: classpath:app.pub
+
+api:
+  version: 1.0-SNAPSHOT
+  description: The API is used to create, update, and delete media & news.
+  server:
+    url: https://tihe.chen
+  app:
+    url: https://tihe.chen
+    name: Tihe Chen
+    email: tihechen@gmail.com
+
+tos:
+  uri: terms-of-service
+
+mongo:
+  uri: mongodb+srv://mongodb:<password>@cluster0.aveshbd.mongodb.net/?retryWrites=true&w=majority
+  database: Media
+
+allowed:
+  origin: https://blog.tihe.chen
