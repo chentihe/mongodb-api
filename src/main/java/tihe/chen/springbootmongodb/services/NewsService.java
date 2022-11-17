@@ -24,7 +24,14 @@ public class NewsService {
 
     public News saveOrUpdateNews(NewsDto newsDto) {
         Media media = mongoTemplate.findOne(new Query(Criteria.where("name").is(newsDto.getMedia())), Media.class);
-        return mongoTemplate.save(new News(media, newsDto.getDescription(), newsDto.getNewsUrl(), newsDto.getCreationDate()));
+        News news = mongoTemplate.findOne(new Query(Criteria.where("newsUrl").is(newsDto.getNewsUrl())), News.class);
+        if (news == null) {
+            news = new News(media, newsDto.getDescription(), newsDto.getNewsUrl());
+        } else {
+            news.setDescription(newsDto.getDescription());
+            news.setMedia(media);
+        }
+        return mongoTemplate.save(news);
     }
 
     public News getNewsById(String id) {

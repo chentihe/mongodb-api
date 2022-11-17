@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RequestMapping("/api/medium")
 @RestController
+@CrossOrigin(origins = "${allowed.origins}", allowCredentials = "true")
 @Tag(name = "Media", description = "The Media API. Contains operations like create media, get media etc.")
 public class MediaController {
     private final MediaService mediaService;

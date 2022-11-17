@@ -21,7 +21,13 @@ public class MediaService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Media saveOrUpdateMedia(Media media) {
+    public Media saveOrUpdateMedia(Media mediaDto) {
+        Media media = mongoTemplate.findOne(new Query(Criteria.where("name").is(mediaDto.getName())), Media.class);
+        if (media == null) {
+            media = new Media(mediaDto.getName(), mediaDto.getThumbnail());
+        } else {
+            media.setThumbnail(mediaDto.getThumbnail());
+        }
         return mongoTemplate.save(media);
     }
 

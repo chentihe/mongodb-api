@@ -52,10 +52,15 @@ public class SecurityConfiguration {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and();
 
+        // set whitelist
+        String[] WHITELIST = {
+                "/api/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**",
+                "/swagger-ui/index.html", "/api-docs/**"
+        };
+
         // set permissions on endpoints
         http = http.authorizeHttpRequests(authorizeRequest -> authorizeRequest
-                .antMatchers("/api/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**",
-                        "/swagger-ui/index.html", "/api-docs/**")
+                .antMatchers(WHITELIST)
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/news/**", "/api/medium/**")
                 .permitAll()

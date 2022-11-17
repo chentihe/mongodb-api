@@ -1,0 +1,8 @@
+allowed:
+  origins: |- 
+    https://test.blog.tihe.chen,
+    https://test.swagger.tihe.chen
+
+mongo:
+  uri: mongodb+srv://mongodb-dev:<password>@cluster0.aveshbd.mongodb.net/?retryWrites=true&w=majority
+  database: Media

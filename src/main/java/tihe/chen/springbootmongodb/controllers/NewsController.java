@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/api/news")
 @RestController
-@CrossOrigin(origins = "${allowed.origin}", allowCredentials = "true")
+@CrossOrigin(origins = "${allowed.origins}", allowCredentials = "true")
 @Tag(name = "News", description = "The News API. Contains operations like create news, get news etc.")
 public class NewsController {
     private NewsService newsService;

@@ -17,11 +17,11 @@ public class News {
     private String mediaUrl;
     private LocalDateTime creationDate;
 
-    public News(Media media, String description, String mediaUrl, LocalDateTime creationDate) {
+    public News(Media media, String description, String mediaUrl) {
         this.media = media;
         this.description = description;
         this.mediaUrl = mediaUrl;
-        this.creationDate = creationDate;
+        this.creationDate = LocalDateTime.now();
     }
 
     public String getId() {

@@ -12,6 +12,14 @@ public class Media {
     private String name;
     private String thumbnail;
 
+    public Media() {
+    }
+
+    public Media(String name, String thumbnail) {
+        this.name = name;
+        this.thumbnail = thumbnail;
+    }
+
     public String getId() {
         return id;
     }
