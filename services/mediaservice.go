@@ -1,6 +1,8 @@
 package services
 
 import (
+	"time"
+
 	"github.com/chentihe/gin-mongo-api/models"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -24,6 +26,8 @@ func (s *MediaService) GetMediaByName(mediaName string) (res *models.Media, err 
 }
 
 func (s *MediaService) CreateMedia(media *models.Media) (res *models.Media, err error) {
+	media.CreatedAt = time.Now()
+	media.UpdatedAt = media.CreatedAt
 	return s.MediaModel.CreateMedia(media)
 }
 

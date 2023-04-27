@@ -21,7 +21,14 @@ func NewMediaController(svc *svc.ServiceContext) *MediaController {
 
 func (c *MediaController) GetAllMedia() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		res, err := c.MediaService.GetAllMedia()
+		page := ctx.DefaultQuery("page", "1")
+		limit := ctx.DefaultQuery("limit", "10")
+
+		filter := make(map[string]interface{}, 0)
+		filter["page"] = page
+		filter["limit"] = limit
+
+		res, err := c.MediaService.GetAllMedia(filter)
 		if err != nil {
 			panic(err)
 		}
