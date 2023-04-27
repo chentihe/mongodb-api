@@ -30,13 +30,17 @@ func NewMediaDao(db *mongo.Database, ctx context.Context) MediaDao {
 	}
 }
 
-func (m *MediaDaoImpl) GetAllMedia(page int, limit int) (res *models.Medium, err error) {
-	paginate := types.NewMongoPaginate(page, limit)
+func (m *MediaDaoImpl) GetAllMedia(paginate *types.MongoPaginate) (res *models.Medium, err error) {
 	query := bson.M{}
 
 	curr, err := m.collection.Find(m.ctx, query, utils.ToOpts(paginate))
 	if err != nil {
 		return nil, err
+	}
+
+	res = &models.Medium{
+		Medium:     make([]*models.Media, 0, paginate.Limit),
+		Pagination: paginate,
 	}
 
 	for curr.Next(m.ctx) {
@@ -48,24 +52,12 @@ func (m *MediaDaoImpl) GetAllMedia(page int, limit int) (res *models.Medium, err
 		res.Medium = append(res.Medium, media)
 	}
 
-	res.Pagination = paginate
-
 	return res, nil
 }
 
 func (m *MediaDaoImpl) GetMediaById(id primitive.ObjectID) (res *models.Media, err error) {
 	query := bson.M{"_id": id}
 	if err = m.collection.FindOne(m.ctx, query).Decode(&res); err != nil {
-		return nil, err
-	}
-
-	return res, nil
-}
-
-func (m *MediaDaoImpl) GetMediaByName(mediaName string) (res *models.Media, err error) {
-	query := bson.D{{"name", mediaName}}
-	err = m.collection.FindOne(m.ctx, query).Decode(&res)
-	if err != nil {
 		return nil, err
 	}
 
@@ -87,8 +79,11 @@ func (m *MediaDaoImpl) CreateMedia(media *models.Media) (res *models.Media, err 
 }
 
 func (m *MediaDaoImpl) UpdateMediaById(id primitive.ObjectID, media *models.Media) (res *models.Media, err error) {
+	docs, err := utils.ToDoc(media)
 	opts := options.FindOneAndUpdate().SetReturnDocument(1)
-	result := m.collection.FindOneAndUpdate(m.ctx, id, media, opts)
+	query := bson.D{{Key: "_id", Value: id}}
+	update := bson.D{{Key: "$set", Value: docs}}
+	result := m.collection.FindOneAndUpdate(m.ctx, query, update, opts)
 	if err = result.Decode(&res); err != nil {
 		return nil, err
 	}
@@ -97,7 +92,7 @@ func (m *MediaDaoImpl) UpdateMediaById(id primitive.ObjectID, media *models.Medi
 }
 
 func (m *MediaDaoImpl) DeleteMediaById(id primitive.ObjectID) (err error) {
-	query := bson.M{"id": id}
+	query := bson.M{"_id": id}
 
 	result, err := m.collection.DeleteOne(m.ctx, query)
 	if err != nil {

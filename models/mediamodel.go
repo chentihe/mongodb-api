@@ -8,15 +8,15 @@ import (
 )
 
 type Media struct {
-	Id        primitive.ObjectID `bson:"_id"`
-	Name      string             `bson:"name"`
-	Thumbnail string             `bson:"thumbnail"`
-	Homepage  string             `bson:"homepage"`
-	CreatedAt time.Time          `bson:"created_at,omitempty"`
-	UpdatedAt time.Time          `bson:"updated_at,omitempty"`
+	Id        primitive.ObjectID `json:"id" bson:"_id,omitempty"`
+	Name      string             `json:"name" bson:"name"`
+	Thumbnail string             `json:"thumbnail" bson:"thumbnail"`
+	Homepage  string             `json:"homepage" bson:"homepage"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at,omitempty"`
+	UpdatedAt time.Time          `json:"updated_at" bson:"updated_at,omitempty"`
 }
 
 type Medium struct {
-	Medium     []*Media
-	Pagination *types.MongoPaginate
+	Medium     []*Media             `json:"medium"`
+	Pagination *types.MongoPaginate `json:"pagination"`
 }

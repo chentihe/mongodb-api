@@ -9,15 +9,23 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/chentihe/gin-mongo-api/config"
 	"github.com/chentihe/gin-mongo-api/config/svc"
-	routes "github.com/chentihe/gin-mongo-api/routers"
+	"github.com/chentihe/gin-mongo-api/routes"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	svc := svc.NewServiceContext()
+	config, err := config.LoadConfig("../")
+	if err != nil {
+		log.Fatal("Could not load environment variables", err)
+	}
+
+	svc := svc.NewServiceContext(config)
 	router := gin.Default()
 	routes.RegisterRouters(router, svc)
+
+	defer svc.DB.Client().Disconnect(context.TODO())
 
 	srv := &http.Server{
 		Addr:    ":8080",

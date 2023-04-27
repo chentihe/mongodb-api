@@ -3,40 +3,56 @@ package services
 import (
 	"time"
 
+	"github.com/chentihe/gin-mongo-api/daos"
+	"github.com/chentihe/gin-mongo-api/dtos"
 	"github.com/chentihe/gin-mongo-api/models"
+	"github.com/chentihe/gin-mongo-api/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type MediaService struct {
-	MediaModel models.MediaModel
+	MediaDao daos.MediaDao
 }
 
-func NewMediaService(mediaModel *models.MediaModel) *MediaService {
+func NewMediaService(mediaDao *daos.MediaDao) *MediaService {
 	return &MediaService{
-		MediaModel: *mediaModel,
+		MediaDao: *mediaDao,
 	}
 }
 
-func (s *MediaService) GetAllMedia(filter map[string]interface{}) (res []*models.Media, err error) {
-	return s.MediaModel.GetAllMedia(filter)
+func (s *MediaService) GetAllMedia(paginate *types.MongoPaginate) (res *models.Medium, err error) {
+	return s.MediaDao.GetAllMedia(paginate)
 }
 
-func (s *MediaService) GetMediaByName(mediaName string) (res *models.Media, err error) {
-	return s.MediaModel.GetMediaByName(mediaName)
+func (s *MediaService) GetMediaById(id string) (res *models.Media, err error) {
+	objId, _ := primitive.ObjectIDFromHex(id)
+	return s.MediaDao.GetMediaById(objId)
 }
 
-func (s *MediaService) CreateMedia(media *models.Media) (res *models.Media, err error) {
+func (s *MediaService) CreateMedia(dto *dtos.CreateMediaDto) (res *models.Media, err error) {
+	media := dtos.ToModel(dto).(*models.Media)
 	media.CreatedAt = time.Now()
 	media.UpdatedAt = media.CreatedAt
-	return s.MediaModel.CreateMedia(media)
+	return s.MediaDao.CreateMedia(media)
 }
 
-func (s *MediaService) UpdateMediaById(id string, media *models.Media) (res *models.Media, err error) {
+func (s *MediaService) UpdateMediaById(id string, dto *dtos.UpdateMediaDto) (res *models.Media, err error) {
 	objId, _ := primitive.ObjectIDFromHex(id)
-	return s.MediaModel.UpdateMediaById(objId, media)
+
+	oldMedia, err := s.MediaDao.GetMediaById(objId)
+	if err != nil {
+		return nil, err
+	}
+
+	dto.FillEmptyField(oldMedia)
+
+	media := dtos.ToModel(dto).(*models.Media)
+	media.UpdatedAt = time.Now()
+
+	return s.MediaDao.UpdateMediaById(objId, media)
 }
 
-func (s *MediaService) DeleteMediaById(id string) (res *models.Media, err error) {
+func (s *MediaService) DeleteMediaById(id string) (err error) {
 	objId, _ := primitive.ObjectIDFromHex(id)
-	return s.MediaModel.DeleteMediaById(objId)
+	return s.MediaDao.DeleteMediaById(objId)
 }

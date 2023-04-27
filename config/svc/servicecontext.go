@@ -3,8 +3,9 @@ package svc
 import (
 	"context"
 
+	"github.com/chentihe/gin-mongo-api/config"
 	"github.com/chentihe/gin-mongo-api/config/database"
-	"github.com/chentihe/gin-mongo-api/models"
+	"github.com/chentihe/gin-mongo-api/daos"
 	"github.com/chentihe/gin-mongo-api/services"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -14,12 +15,12 @@ type ServiceContext struct {
 	MediaService *services.MediaService
 }
 
-func NewServiceContext() *ServiceContext {
-	ctx := context.Background()
-	db := database.ConnectDB(ctx)
+func NewServiceContext(config *config.Config) *ServiceContext {
+	ctx := context.TODO()
+	db := database.ConnectDB(ctx, &config.DataBase)
 
-	mediaModel := models.NewMediaModel(db, ctx)
-	mediaService := services.NewMediaService(&mediaModel)
+	mediaDao := daos.NewMediaDao(db, ctx)
+	mediaService := services.NewMediaService(&mediaDao)
 
 	return &ServiceContext{
 		DB:           db,

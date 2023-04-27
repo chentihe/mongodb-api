@@ -14,26 +14,38 @@ type UpdateMediaDto struct {
 	Homepage  string `json:"homepage,omitempty"`
 }
 
-func ToModel(dto interface{}) *models.Media {
+func (dto *UpdateMediaDto) FillEmptyField(media *models.Media) {
+	if dto.Name == "" {
+		dto.Name = media.Name
+	}
+
+	if dto.Thumbnail == "" {
+		dto.Thumbnail = media.Thumbnail
+	}
+
+	if dto.Homepage == "" {
+		dto.Homepage = media.Homepage
+	}
+}
+
+func ToModel(dto interface{}) interface{} {
 	var media *models.Media
 
 	switch dto.(type) {
-	case UpdateMediaDto:
-		updateMediaDto := dto.(UpdateMediaDto)
-		if updateMediaDto.Name != "" {
-			media.Name = updateMediaDto.Name
+	case *UpdateMediaDto:
+		updateMediaDto := dto.(*UpdateMediaDto)
+		media = &models.Media{
+			Name:      updateMediaDto.Name,
+			Thumbnail: updateMediaDto.Thumbnail,
+			Homepage:  updateMediaDto.Homepage,
 		}
-		if updateMediaDto.Thumbnail != "" {
-			media.Thumbnail = updateMediaDto.Thumbnail
+	case *CreateMediaDto:
+		createMediaDto := dto.(*CreateMediaDto)
+		media = &models.Media{
+			Name:      createMediaDto.Name,
+			Thumbnail: createMediaDto.Thumbnail,
+			Homepage:  createMediaDto.Homepage,
 		}
-		if updateMediaDto.Homepage != "" {
-			media.Homepage = updateMediaDto.Homepage
-		}
-	case CreateMediaDto:
-		createMediaDto := dto.(CreateMediaDto)
-		media.Name = createMediaDto.Name
-		media.Thumbnail = createMediaDto.Thumbnail
-		media.Homepage = createMediaDto.Homepage
 	}
 
 	return media

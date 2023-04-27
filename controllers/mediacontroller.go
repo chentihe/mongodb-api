@@ -6,6 +6,7 @@ import (
 	"github.com/chentihe/gin-mongo-api/config/svc"
 	"github.com/chentihe/gin-mongo-api/dtos"
 	"github.com/chentihe/gin-mongo-api/services"
+	"github.com/chentihe/gin-mongo-api/types"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,14 +22,12 @@ func NewMediaController(svc *svc.ServiceContext) *MediaController {
 
 func (c *MediaController) GetAllMedia() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		page := ctx.DefaultQuery("page", "1")
-		limit := ctx.DefaultQuery("limit", "10")
+		var paginate *types.MongoPaginate
+		if err := ctx.ShouldBindQuery(&paginate); err != nil {
+			panic(err)
+		}
 
-		filter := make(map[string]interface{}, 0)
-		filter["page"] = page
-		filter["limit"] = limit
-
-		res, err := c.MediaService.GetAllMedia(filter)
+		res, err := c.MediaService.GetAllMedia(paginate)
 		if err != nil {
 			panic(err)
 		}
@@ -37,11 +36,11 @@ func (c *MediaController) GetAllMedia() gin.HandlerFunc {
 	}
 }
 
-func (c *MediaController) GetMediaByName() gin.HandlerFunc {
+func (c *MediaController) GetMediaById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		mediaName := ctx.Query("mediaName")
+		id := ctx.Param("id")
 
-		res, err := c.MediaService.GetMediaByName(mediaName)
+		res, err := c.MediaService.GetMediaById(id)
 		if err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 		}
@@ -52,16 +51,14 @@ func (c *MediaController) GetMediaByName() gin.HandlerFunc {
 
 func (c *MediaController) CreateMedia() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var dto dtos.CreateMediaDto
+		var dto *dtos.CreateMediaDto
 
 		if err := ctx.ShouldBindJSON(&dto); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		newMedia := dto.ToModel()
-
-		res, err := c.MediaService.CreateMedia(newMedia)
+		res, err := c.MediaService.CreateMedia(dto)
 		if err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
@@ -74,16 +71,14 @@ func (c *MediaController) CreateMedia() gin.HandlerFunc {
 func (c *MediaController) UpdateMediaById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
-		var dto dtos.UpdateMediaDto
+		var dto *dtos.UpdateMediaDto
 
 		if err := ctx.ShouldBindJSON(&dto); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 
-		updateMedia := dto.ToModel()
-
-		res, err := c.MediaService.UpdateMediaById(id, updateMedia)
+		res, err := c.MediaService.UpdateMediaById(id, dto)
 		if err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
@@ -97,12 +92,11 @@ func (c *MediaController) DeleteMediaById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id := ctx.Param("id")
 
-		res, err := c.MediaService.DeleteMediaById(id)
-		if err != nil {
+		if err := c.MediaService.DeleteMediaById(id); err != nil {
 			ctx.JSON(http.StatusUnprocessableEntity, gin.H{"error": err.Error()})
 			return
 		}
 
-		ctx.IndentedJSON(http.StatusOK, res)
+		ctx.IndentedJSON(http.StatusNoContent, nil)
 	}
 }

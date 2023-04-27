@@ -2,16 +2,17 @@ package database
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/chentihe/gin-mongo-api/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const uri = "connection string"
-const database = "database"
-
-func ConnectDB(ctx context.Context) *mongo.Database {
+func ConnectDB(ctx context.Context, database *config.DataBase) *mongo.Database {
+	uri := fmt.Sprintf("mongodb+srv://%s:%s@cluster0.anx106i.mongodb.net/?retryWrites=true&w=majority",
+		database.UserName, database.Password)
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
 
@@ -19,15 +20,9 @@ func ConnectDB(ctx context.Context) *mongo.Database {
 	if err != nil {
 		panic(err)
 	}
-	defer func() {
-		if err = client.Disconnect(ctx); err != nil {
-			panic(err)
-		}
-	}()
 
-	var result bson.M
-	db := client.Database(database)
-	if db.RunCommand(ctx, bson.D{{Key: "ping", Value: 1}}).Decode(&result); err != nil {
+	db := client.Database(database.Name)
+	if db.RunCommand(ctx, bson.D{{Key: "ping", Value: 1}}); err != nil {
 		panic(err)
 	}
 

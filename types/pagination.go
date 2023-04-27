@@ -1,8 +1,8 @@
 package types
 
 type MongoPaginate struct {
-	Page  int64
-	Limit int64
+	Page  int64 `form:"page" binding:"min=1" json:"page"`
+	Limit int64 `form:"limit" json:"limit"`
 }
 
 func NewMongoPaginate(page int, limit int) *MongoPaginate {
