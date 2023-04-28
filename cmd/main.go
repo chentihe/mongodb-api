@@ -11,12 +11,15 @@ import (
 
 	"github.com/chentihe/gin-mongo-api/config"
 	"github.com/chentihe/gin-mongo-api/config/svc"
+	_ "github.com/chentihe/gin-mongo-api/docs"
 	"github.com/chentihe/gin-mongo-api/routes"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
-	config, err := config.LoadConfig("../")
+	config, err := config.LoadConfig(".")
 	if err != nil {
 		log.Fatal("Could not load environment variables", err)
 	}
@@ -24,6 +27,7 @@ func main() {
 	svc := svc.NewServiceContext(config)
 	router := gin.Default()
 	routes.RegisterRouters(router, svc)
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	defer svc.DB.Client().Disconnect(context.TODO())
 
