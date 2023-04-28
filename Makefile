@@ -5,13 +5,13 @@ APP = ./app
 MAIN := $(dir $(mkfile_path))cmd
 
 serve: start
-	@fswatch -x -o --event Created --event Updated --event Renamed -r -e '.*' -i '\.go$$'  **/*.go | xargs -n1 -I{}  make restart || make kill
+	@fswatch -or --event Created --event Updated --event Renamed /home/tihe/tihe/gin-mongo --exclude /home/tihe/tihe/gin-mongo/docs/* | xargs -n1 -I{} make restart
 
 kill:
 	@kill `cat $(PID)` || true
 
 before:
-	@echo "actually do nothing"
+	@swag init --generalInfo routes/routes.go
 
 build: $(GO_FILES)
 	@go build -o $(APP) $(MAIN)

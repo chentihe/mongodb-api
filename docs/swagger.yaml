@@ -1,4 +1,59 @@
 basePath: /api/v1
+definitions:
+  dtos.CreateMediaDto:
+    properties:
+      homepage:
+        type: string
+      name:
+        type: string
+      thumbnail:
+        type: string
+    required:
+    - homepage
+    - name
+    - thumbnail
+    type: object
+  dtos.UpdateMediaDto:
+    properties:
+      homepage:
+        type: string
+      name:
+        type: string
+      thumbnail:
+        type: string
+    type: object
+  models.Media:
+    properties:
+      created_at:
+        type: string
+      homepage:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      thumbnail:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.Medium:
+    properties:
+      medium:
+        items:
+          $ref: '#/definitions/models.Media'
+        type: array
+      pagination:
+        $ref: '#/definitions/types.MongoPaginate'
+    type: object
+  types.MongoPaginate:
+    properties:
+      limit:
+        type: integer
+      page:
+        minimum: 1
+        type: integer
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -8,14 +63,126 @@ info:
     email: support@swagger.io
     name: API Support
     url: http://www.swagger.io/support
-  description: This is a sample server celler server.
+  description: This is an server to manage news from mongoDB.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Swagger Example API
+  title: News API
   version: "1.0"
-paths: {}
+paths:
+  /media:
+    get:
+      consumes:
+      - application/json
+      description: get medium for the given page and limit
+      parameters:
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Medium'
+      summary: Show All Media
+      tags:
+      - Media
+    post:
+      consumes:
+      - application/json
+      description: create the media
+      parameters:
+      - description: Create Media Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.CreateMediaDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Media'
+      summary: Create New Media
+      tags:
+      - Media
+  /media/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete the media by id
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "203":
+          description: Non-Authoritative Information
+      summary: Delete The Media By Id
+      tags:
+      - Media
+    get:
+      consumes:
+      - application/json
+      description: get the media for the given id
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Media'
+      summary: Show The Media By Id
+      tags:
+      - Media
+    put:
+      consumes:
+      - application/json
+      description: update the media by id
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Media Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.UpdateMediaDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Media'
+      summary: Update The Media By Id
+      tags:
+      - Media
 securityDefinitions:
   BasicAuth:
     type: basic

@@ -21,13 +21,16 @@ func NewMediaController(svc *svc.ServiceContext) *MediaController {
 }
 
 // GetAllMedia godoc
-// @Summary Show All Media
-// @Description get medium for the given page and limit
-// @Tags medium
-// @Accept json
-// @Produce json
-// @Success 200 {object} models.Medium
-// @Router /media [get]
+//
+//	@Summary		Show All Media
+//	@Description	get medium for the given page and limit
+//	@Tags			Media
+//	@Accept			json
+//	@Produce		json
+//	@Param			page	query		int	true	"Page"
+//	@Param			limit	query		int	true	"Limit"
+//	@Success		200		{object}	models.Medium
+//	@Router			/media [get]
 func (c *MediaController) GetAllMedia(ctx *gin.Context) {
 	var paginate *types.MongoPaginate
 	if err := ctx.ShouldBindQuery(&paginate); err != nil {
@@ -42,6 +45,16 @@ func (c *MediaController) GetAllMedia(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, res)
 }
 
+// GetAllMediaById godoc
+//
+//	@Summary		Show The Media By Id
+//	@Description	get the media for the given id
+//	@Tags			Media
+//	@Accept			json
+//	@Produce		json
+//	@Param			id	path		string	true	"Id"
+//	@Success		200	{object}	models.Media
+//	@Router			/media/{id} [get]
 func (c *MediaController) GetMediaById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
@@ -53,6 +66,16 @@ func (c *MediaController) GetMediaById(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, res)
 }
 
+// CreateMedia godoc
+//
+//	@Summary		Create New Media
+//	@Description	create the media
+//	@Tags			Media
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dtos.CreateMediaDto	true	"Create Media Request"
+//	@Success		201		{object}	models.Media
+//	@Router			/media [post]
 func (c *MediaController) CreateMedia(ctx *gin.Context) {
 	var dto *dtos.CreateMediaDto
 
@@ -70,6 +93,17 @@ func (c *MediaController) CreateMedia(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusCreated, res)
 }
 
+// UpdateMedia godoc
+//
+//		@Summary		Update The Media By Id
+//		@Description	update the media by id
+//		@Tags			Media
+//		@Accept			json
+//		@Produce		json
+//	 	@Param          id	path		string	true	"Id"
+//		@Param			request	body		dtos.UpdateMediaDto	true	"Update Media Request"
+//		@Success		200		{object}	models.Media
+//		@Router			/media/{id} [put]
 func (c *MediaController) UpdateMediaById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var dto *dtos.UpdateMediaDto
@@ -88,6 +122,16 @@ func (c *MediaController) UpdateMediaById(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, res)
 }
 
+// DeleteMedia godoc
+//
+//		@Summary		Delete The Media By Id
+//		@Description	delete the media by id
+//		@Tags			Media
+//		@Accept			json
+//		@Produce		json
+//	 	@Param          id	path		string	true	"Id"
+//		@Success		203
+//		@Router			/media/{id} [delete]
 func (c *MediaController) DeleteMediaById(ctx *gin.Context) {
 	id := ctx.Param("id")
 
