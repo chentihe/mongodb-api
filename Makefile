@@ -1,28 +1,18 @@
-mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
-PID = ./app.pid
-GO_FILES = $(wildcard *.go)$(wildcard **/*.go)
 APP = ./app
-MAIN := $(dir $(mkfile_path))cmd
+MAIN := ./cmd
 
-serve: start
-	@fswatch -or --event Created --event Updated --event Renamed /home/tihe/tihe/gin-mongo --exclude /home/tihe/tihe/gin-mongo/docs/* | xargs -n1 -I{} make restart
-
-kill:
-	@kill `cat $(PID)` || true
+serve:
+	@reflex --start-service -r '\.go$$' -R '^docs/*' make restart
 
 before:
 	@swag init --generalInfo routes/routes.go
 
-build: $(GO_FILES)
+build:
 	@go build -o $(APP) $(MAIN)
 
-$(APP): $(GO_FILES)
-	@go build $? -o $@ $(MAIN)
-
 start:
-	# @sh -c "$(APP) & echo $$! > $(PID)"
-	@./app & echo $$! > $(PID)
+	@$(APP)
 
-restart: kill before build start
+restart: before build start
 
-.PHONY: start serve restart kill before # let's go to reserve rules names
+.PHONY: start serve restart kill before sleep # let's go to reserve rules names
