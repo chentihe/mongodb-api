@@ -1,4 +1,4 @@
-APP = ./app
+APP := ./app
 MAIN := ./cmd
 
 serve:
@@ -15,4 +15,4 @@ start:
 
 restart: before build start
 
-.PHONY: start serve restart kill before sleep # let's go to reserve rules names
+.PHONY: start serve restart before sleep # let's go to reserve rules names

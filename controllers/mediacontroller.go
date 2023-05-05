@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/chentihe/gin-mongo-api/config/svc"
-	"github.com/chentihe/gin-mongo-api/dtos"
-	"github.com/chentihe/gin-mongo-api/services"
-	"github.com/chentihe/gin-mongo-api/types"
+	"github.com/chentihe/mongodb-api/config/svc"
+	"github.com/chentihe/mongodb-api/dtos"
+	"github.com/chentihe/mongodb-api/services"
+	"github.com/chentihe/mongodb-api/types"
 	"github.com/gin-gonic/gin"
 )
 
@@ -27,6 +27,7 @@ func NewMediaController(svc *svc.ServiceContext) *MediaController {
 //	@Tags			Media
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Param			page	query		int	true	"Page"
 //	@Param			limit	query		int	true	"Limit"
 //	@Success		200		{object}	models.Medium
@@ -52,6 +53,7 @@ func (c *MediaController) GetAllMedia(ctx *gin.Context) {
 //	@Tags			Media
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Param			id	path		string	true	"Id"
 //	@Success		200	{object}	models.Media
 //	@Router			/media/{id} [get]
@@ -73,6 +75,7 @@ func (c *MediaController) GetMediaById(ctx *gin.Context) {
 //	@Tags			Media
 //	@Accept			json
 //	@Produce		json
+//	@Security		BearerAuth
 //	@Param			request	body		dtos.CreateMediaDto	true	"Create Media Request"
 //	@Success		201		{object}	models.Media
 //	@Router			/media [post]
@@ -95,15 +98,16 @@ func (c *MediaController) CreateMedia(ctx *gin.Context) {
 
 // UpdateMedia godoc
 //
-//		@Summary		Update The Media By Id
-//		@Description	update the media by id
-//		@Tags			Media
-//		@Accept			json
-//		@Produce		json
-//	 	@Param          id	path		string	true	"Id"
-//		@Param			request	body		dtos.UpdateMediaDto	true	"Update Media Request"
-//		@Success		200		{object}	models.Media
-//		@Router			/media/{id} [put]
+//	@Summary		Update The Media By Id
+//	@Description	update the media by id
+//	@Tags			Media
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id		path		string				true	"Id"
+//	@Param			request	body		dtos.UpdateMediaDto	true	"Update Media Request"
+//	@Success		200		{object}	models.Media
+//	@Router			/media/{id} [put]
 func (c *MediaController) UpdateMediaById(ctx *gin.Context) {
 	id := ctx.Param("id")
 	var dto *dtos.UpdateMediaDto
@@ -124,14 +128,15 @@ func (c *MediaController) UpdateMediaById(ctx *gin.Context) {
 
 // DeleteMedia godoc
 //
-//		@Summary		Delete The Media By Id
-//		@Description	delete the media by id
-//		@Tags			Media
-//		@Accept			json
-//		@Produce		json
-//	 	@Param          id	path		string	true	"Id"
-//		@Success		203
-//		@Router			/media/{id} [delete]
+//	@Summary		Delete The Media By Id
+//	@Description	delete the media by id
+//	@Tags			Media
+//	@Accept			json
+//	@Produce		json
+//	@Security		BearerAuth
+//	@Param			id	path	string	true	"Id"
+//	@Success		203
+//	@Router			/media/{id} [delete]
 func (c *MediaController) DeleteMediaById(ctx *gin.Context) {
 	id := ctx.Param("id")
 

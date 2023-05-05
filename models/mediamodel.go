@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/chentihe/gin-mongo-api/types"
+	"github.com/chentihe/mongodb-api/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

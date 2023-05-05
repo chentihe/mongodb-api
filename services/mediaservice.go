@@ -3,10 +3,10 @@ package services
 import (
 	"time"
 
-	"github.com/chentihe/gin-mongo-api/daos"
-	"github.com/chentihe/gin-mongo-api/dtos"
-	"github.com/chentihe/gin-mongo-api/models"
-	"github.com/chentihe/gin-mongo-api/types"
+	"github.com/chentihe/mongodb-api/daos"
+	"github.com/chentihe/mongodb-api/dtos"
+	"github.com/chentihe/mongodb-api/models"
+	"github.com/chentihe/mongodb-api/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

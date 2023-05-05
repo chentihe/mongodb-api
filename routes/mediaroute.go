@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"github.com/chentihe/gin-mongo-api/config/svc"
-	"github.com/chentihe/gin-mongo-api/controllers"
+	"github.com/chentihe/mongodb-api/config/svc"
+	"github.com/chentihe/mongodb-api/controllers"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,8 +1,8 @@
 package daos
 
 import (
-	"github.com/chentihe/gin-mongo-api/models"
-	"github.com/chentihe/gin-mongo-api/types"
+	"github.com/chentihe/mongodb-api/models"
+	"github.com/chentihe/mongodb-api/types"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 

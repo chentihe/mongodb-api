@@ -13,6 +13,16 @@ definitions:
     - name
     - thumbnail
     type: object
+  dtos.LoginDto:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   dtos.UpdateMediaDto:
     properties:
       homepage:
@@ -71,6 +81,24 @@ info:
   title: News API
   version: "1.0"
 paths:
+  /login:
+    post:
+      parameters:
+      - description: login
+        in: body
+        name: register
+        required: true
+        schema:
+          $ref: '#/definitions/dtos.LoginDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - user
   /media:
     get:
       consumes:
@@ -94,6 +122,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Medium'
+      security:
+      - BearerAuth: []
       summary: Show All Media
       tags:
       - Media
@@ -115,6 +145,8 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/models.Media'
+      security:
+      - BearerAuth: []
       summary: Create New Media
       tags:
       - Media
@@ -134,6 +166,8 @@ paths:
       responses:
         "203":
           description: Non-Authoritative Information
+      security:
+      - BearerAuth: []
       summary: Delete The Media By Id
       tags:
       - Media
@@ -154,6 +188,8 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Media'
+      security:
+      - BearerAuth: []
       summary: Show The Media By Id
       tags:
       - Media
@@ -180,10 +216,15 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.Media'
+      security:
+      - BearerAuth: []
       summary: Update The Media By Id
       tags:
       - Media
 securityDefinitions:
-  BasicAuth:
-    type: basic
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

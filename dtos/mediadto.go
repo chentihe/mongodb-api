@@ -1,6 +1,6 @@
 package dtos
 
-import "github.com/chentihe/gin-mongo-api/models"
+import "github.com/chentihe/mongodb-api/models"
 
 type CreateMediaDto struct {
 	Name      string `json:"name" binding:"required"`

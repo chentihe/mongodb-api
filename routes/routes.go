@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"github.com/chentihe/gin-mongo-api/config/svc"
+	"github.com/chentihe/mongodb-api/config/svc"
+	"github.com/chentihe/mongodb-api/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,11 +21,16 @@ import (
 //	@host		localhost:8080
 //	@BasePath	/api/v1
 
-//	@securityDefinitions.basic	BasicAuth
+//	@securityDefinitions.apikey	BearerAuth
+//	@in							header
+//	@name						Authorization
+//	@description				Type "Bearer" followed by a space and JWT token
 
 //	@externalDocs.description	OpenAPI
 //	@externalDocs.url			https://swagger.io/resources/open-api/
 func RegisterRouters(router *gin.Engine, ctx *svc.ServiceContext) {
 	v1 := router.Group("/api/v1")
+	AddAuthRoutes(v1, ctx)
+	v1.Use(middlewares.JWTAuthMiddleware(ctx.Config.Jwt.PublicKey))
 	AddMediaRoutes(v1, ctx)
 }

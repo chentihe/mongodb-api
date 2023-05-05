@@ -5,9 +5,9 @@ import (
 	"errors"
 	"log"
 
-	"github.com/chentihe/gin-mongo-api/models"
-	"github.com/chentihe/gin-mongo-api/types"
-	"github.com/chentihe/gin-mongo-api/utils"
+	"github.com/chentihe/mongodb-api/models"
+	"github.com/chentihe/mongodb-api/types"
+	"github.com/chentihe/mongodb-api/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
