@@ -16,6 +16,7 @@ type DataBase struct {
 	Name     string `mapstructure:"name"`
 	UserName string `mapstructure:"username"`
 	Password string `mapstructure:"password"`
+	Cluster  string `mapstructure:"cluster"`
 }
 
 type Jwt struct {
