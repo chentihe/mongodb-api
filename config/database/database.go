@@ -11,9 +11,10 @@ import (
 )
 
 func ConnectDB(ctx context.Context, database *config.DataBase) (*mongo.Database, error) {
-	uri := fmt.Sprintf("mongodb+srv://%s:%s@cluster0.anx106i.mongodb.net/?retryWrites=true&w=majority",
+	uri := fmt.Sprintf("mongodb+srv://%s:%s@%s.mongodb.net/?retryWrites=true&w=majority",
 		database.UserName,
 		database.Password,
+		database.Cluster,
 	)
 	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
 	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
