@@ -31,7 +31,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	routes.RegisterRouters(router, svc)
+	routes.RegisterRouters(router, svc, config)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	defer svc.DB.Client().Disconnect(ctx)

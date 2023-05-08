@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/chentihe/mongodb-api/config"
-	"github.com/chentihe/mongodb-api/config/svc"
 	"github.com/chentihe/mongodb-api/dtos"
 	"github.com/chentihe/mongodb-api/services"
 	"github.com/chentihe/mongodb-api/utils"
@@ -16,10 +15,10 @@ type AuthController struct {
 	Jwt         *config.Jwt
 }
 
-func NewAuthController(svc *svc.ServiceContext) *AuthController {
+func NewAuthController(userService *services.UserService, jwt *config.Jwt) *AuthController {
 	return &AuthController{
-		UserService: svc.UserService,
-		Jwt:         &svc.Config.Jwt,
+		UserService: userService,
+		Jwt:         jwt,
 	}
 }
 

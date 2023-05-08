@@ -5,16 +5,16 @@ import (
 
 	"github.com/chentihe/mongodb-api/config"
 	"github.com/chentihe/mongodb-api/config/database"
+	"github.com/chentihe/mongodb-api/controllers"
 	"github.com/chentihe/mongodb-api/daos"
 	"github.com/chentihe/mongodb-api/services"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type ServiceContext struct {
-	DB           *mongo.Database
-	MediaService *services.MediaService
-	UserService  *services.UserService
-	Config       *config.Config
+	DB              *mongo.Database
+	AuthController  *controllers.AuthController
+	MediaController *controllers.MediaController
 }
 
 func NewServiceContext(config *config.Config, ctx context.Context) (*ServiceContext, error) {
@@ -25,13 +25,14 @@ func NewServiceContext(config *config.Config, ctx context.Context) (*ServiceCont
 
 	mediaDao := daos.NewMediaDao(db, ctx)
 	mediaService := services.NewMediaService(&mediaDao)
+	mediaController := controllers.NewMediaController(mediaService)
 
 	userService := services.NewUserService()
+	authController := controllers.NewAuthController(userService, &config.Jwt)
 
 	return &ServiceContext{
-		DB:           db,
-		MediaService: mediaService,
-		UserService:  userService,
-		Config:       config,
+		DB:              db,
+		AuthController:  authController,
+		MediaController: mediaController,
 	}, nil
 }

@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/chentihe/mongodb-api/config/svc"
 	"github.com/chentihe/mongodb-api/dtos"
 	"github.com/chentihe/mongodb-api/services"
 	"github.com/chentihe/mongodb-api/types"
@@ -14,9 +13,9 @@ type MediaController struct {
 	MediaService *services.MediaService
 }
 
-func NewMediaController(svc *svc.ServiceContext) *MediaController {
+func NewMediaController(mediaService *services.MediaService) *MediaController {
 	return &MediaController{
-		MediaService: svc.MediaService,
+		MediaService: mediaService,
 	}
 }
 

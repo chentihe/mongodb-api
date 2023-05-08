@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/chentihe/mongodb-api/config"
 	"github.com/chentihe/mongodb-api/config/svc"
 	"github.com/chentihe/mongodb-api/middlewares"
 	"github.com/gin-gonic/gin"
@@ -26,11 +27,11 @@ import (
 //	@name						Authorization
 //	@description				Type "Bearer" followed by a space and JWT token
 
-//	@externalDocs.description	OpenAPI
-//	@externalDocs.url			https://swagger.io/resources/open-api/
-func RegisterRouters(router *gin.Engine, ctx *svc.ServiceContext) {
+// @externalDocs.description	OpenAPI
+// @externalDocs.url			https://swagger.io/resources/open-api/
+func RegisterRouters(router *gin.Engine, ctx *svc.ServiceContext, config *config.Config) {
 	v1 := router.Group("/api/v1")
-	AddAuthRoutes(v1, ctx)
-	v1.Use(middlewares.JWTAuthMiddleware(ctx.Config.Jwt.PublicKey))
-	AddMediaRoutes(v1, ctx)
+	AddAuthRoutes(v1, ctx.AuthController)
+	v1.Use(middlewares.JWTAuthMiddleware(config.Jwt.PublicKey))
+	AddMediaRoutes(v1, ctx.MediaController)
 }
